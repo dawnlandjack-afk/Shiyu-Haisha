@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2026年，给我的诗玉师妹</title>
+    <style>
+        body { margin:0; padding:0; height:100vh; background:linear-gradient(to bottom,#e0f7fa,#fff0f5); font-family:'华文楷体','KaiTi','微软雅黑',serif; color:#4a148c; display:flex; justify-content:center; align-items:center; overflow:hidden; position:relative; }
+        .container { width:90%; max-width:600px; height:85vh; background:rgba(255,255,255,0.78); border-radius:25px; box-shadow:0 15px 40px rgba(0,0,0,0.18); backdrop-filter:blur(12px); padding:30px 20px; display:flex; flex-direction:column; z-index:10; }
+        .forever-love { text-align:center; font-size:1.6em; color:#880e4f; margin-bottom:10px; font-style:italic; letter-spacing:1px; }
+        h1 { text-align:center; font-size:2.2em; color:#880e4f; letter-spacing:2px; margin-bottom:15px; flex-shrink:0; }
+        .heart-top { text-align:center; font-size:3.5em; color:#e91e63; margin-bottom:20px; flex-shrink:0; }
+        .letter-box { flex:1; overflow-y:auto; overflow-x:hidden; padding:0 10px 20px; line-height:2.3; font-size:1.18em; text-align:left; word-wrap:break-word; margin-bottom:20px; }
+        .letter-box::-webkit-scrollbar { width:5px; }
+        .letter-box::-webkit-scrollbar-thumb { background:rgba(136,14,79,0.4); border-radius:3px; }
+        .salutation { font-size:1.3em; text-align:center; margin:20px 0 30px; }
+        .closing { text-align:right; margin:25px 0 10px; font-size:1.3em; line-height:1.8; }
+        .cursor { display:inline-block; width:2px; height:1.2em; background:#4a148c; margin-left:2px; vertical-align:middle; animation:blink 1s infinite; }
+        @keyframes blink { 0%,50%{opacity:1} 51%,100%{opacity:0} }
+        .photos-section { opacity:0; transition:opacity 2s ease; flex-shrink:0; text-align:center; }
+        .photos-title { font-size:1.3em; color:#5c9ce5; margin-bottom:15px; } /* 冰蓝色玫瑰色 */
+        .photos-carousel { display:flex; overflow-x:auto; gap:20px; padding:10px 0; scrollbar-width:none; }
+        .photos-carousel::-webkit-scrollbar { display:none; }
+        .photo-item { flex-shrink:0; width:280px; height:280px; border-radius:18px; overflow:hidden; box-shadow:0 8px 25px rgba(0,0,0,0.2); }
+        .photo-item img { width:100%; height:100%; object-fit:cover; }
+        .heart-bottom { text-align:center; font-size:3.5em; color:#e91e63; margin-top:20px; flex-shrink:0; }
+        .particles { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; }
+        .particle { position:absolute; opacity:0.6; animation:fall linear infinite; }
+        @keyframes fall { 0%{transform:translateY(-100px) rotate(0deg);opacity:0} 10%{opacity:0.6} 90%{opacity:0.6} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    <div class="container">
+        <div class="forever-love">To my forever love, Shiyu</div>
+        <h1>2026年，给我的诗玉师妹</h1>
+        <div class="heart-top"></div>
+        <div class="letter-box" id="letter"></div>
+        <div class="photos-section" id="photosSection">
+            <div class="photos-title">我们的甜蜜回忆</div>
+            <div class="photos-carousel" id="photosCarousel"></div>
+        </div>
+        <div class="heart-bottom"></div>
+    </div>
+    <script>
+        const fullText = "亲爱的诗玉师妹：\n\n  从遇见你的那一刻起，我的世界就悄悄被点亮了。你的笑容像春风一样温暖，轻轻拂过我心底最柔软的角落；你的眼神像星河般明亮，让我忍不住沉溺其中，无法自拔。\n\n  每一次想到你，我的心就会不自觉地加速跳动，好像全世界都只剩下你我的存在。生活中的琐碎和疲惫，在你的陪伴下都变得甜蜜可爱。你是我生命中最美的诗篇，而我愿意用一生去读懂、去守护。\n\n  我想牵着你的手，一起走过春夏秋冬，看日出日落，听风声雨声，感受岁月的温柔。我想在每一个平凡的日子里，把你的名字悄悄刻在心底，让爱成为我们不变的旋律。\n\n  诗玉，我爱你，不只是因为你是你，更因为和你在一起，我才能成为更好的自己。愿我们的未来如同今天的微光，温暖而明亮，携手走向属于我们的幸福。\n\n永远爱你的，\n师兄哥哥\n2026年1月1日";
+        const photoUrls = [
+            "https://youke2.picui.cn/s1/2025/12/26/694df47462203.jpg",  // 夜灯甜蜜合照
+            "https://youke2.picui.cn/s1/2025/12/26/694df46f96495.jpg"   // 冰蓝玫瑰牵手
+        ];
+        const letterBox = document.getElementById('letter');
+        const photosSection = document.getElementById('photosSection');
+        const photosCarousel = document.getElementById('photosCarousel');
+        let i = 0;
+        const typingSpeed = 100;
+        const paragraphPause = 1000;
+        function typeWriter() {
+            if (i < fullText.length) {
+                const char = fullText.charAt(i);
+                if (char === '\n') {
+                    letterBox.appendChild(document.createElement('br'));
+                } else if (char === ' ') { // 处理缩进空格
+                    if (fullText.substr(i, 2) === '  ') {
+                        letterBox.appendChild(document.createTextNode('\u00A0\u00A0'));
+                        i++;
+                    } else {
+                        letterBox.appendChild(document.createTextNode(' '));
+                    }
+                } else {
+                    const span = document.createElement('span');
+                    span.textContent = char;
+                    letterBox.appendChild(span);
+                }
+                if (i === fullText.length - 1) {
+                    const cursor = document.createElement('span');
+                    cursor.className = 'cursor';
+                    cursor.innerHTML = '&nbsp;';
+                    letterBox.appendChild(cursor);
+                }
+                letterBox.scrollTop = letterBox.scrollHeight;
+                i++;
+                setTimeout(typeWriter, char === '\n' ? paragraphPause : typingSpeed);
+            } else {
+                const cursor = document.querySelector('.cursor');
+                if (cursor) cursor.remove();
+                photoUrls.forEach(url => {
+                    const item = document.createElement('div');
+                    item.className = 'photo-item';
+                    const img = document.createElement('img');
+                    img.src = url;
+                    item.appendChild(img);
+                    photosCarousel.appendChild(item);
+                });
+                setTimeout(() => { photosSection.style.opacity = 1; }, 600);
+            }
+        }
+        window.onload = () => setTimeout(typeWriter, 1200);
+        const particlesContainer = document.getElementById('particles');
+        const petals = ['','','','','️',''];
+        function createParticle() {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.textContent = petals[Math.floor(Math.random()*petals.length)];
+            p.style.left = Math.random()*100 + 'vw';
+            p.style.fontSize = (Math.random()*15 + 25) + 'px';
+            p.style.animationDuration = (Math.random()*8 + 10) + 's';
+            particlesContainer.appendChild(p);
+            p.addEventListener('animationend', () => p.remove());
+        }
+        setInterval(createParticle, 600);
+        for (let j = 0; j < 12; j++) setTimeout(createParticle, j * 800);
+    </script>
+</body>
+</html>
+
